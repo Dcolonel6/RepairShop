@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
 
 
 
@@ -36,6 +37,12 @@ const Table = ({ data, headers, deleteHandler, editHandler, template }) => {
           key={`${rowIndx}"-delete"`}
           className="text-lg text-red-600 font-normal px-6 py-4 whitespace-nowrap"
         >
+          <AiFillDelete
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteHandler(id);
+            }}
+          />
         </td>
         
       </tr>
