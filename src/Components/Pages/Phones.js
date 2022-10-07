@@ -57,8 +57,27 @@ const Phones = () => {
     setShowModal(false);
     
   }
+  function deletePhone(id){
+    FactoryServerCommunication(`/phones/${id}`,'DELETE')()
+    FactoryServerCommunication('/phones')((data) => setPhones(data))
+  }
+
   return (
+    <div className="container mx-auto">
       <div>Phones</div>
+
+      <div className="grid grid-cols-9 gap-4 mb-4">
+        <div className="col-start-4 col-span-2 text-center py-3">
+          <h1 className="text-base font-medium"> All Phone Details Table</h1>
+        </div>
+        <button
+          className="col-end-10 bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          type="button"
+          onClick={() => setShowModal(true)}
+        >
+          Add Phone
+        </button>
+      </div>
 
       <Modal
         showModal={showModal}
@@ -67,6 +86,8 @@ const Phones = () => {
       >
         <Form template={template} onSubmit={onSubmit} />
       </Modal>
+      <Table headers={tableHeaders} data={phones} deleteHandler={deletePhone} />
+    </div>
   );
 };
 
