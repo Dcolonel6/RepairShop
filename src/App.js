@@ -4,8 +4,6 @@ import Home from "./Components/Pages/Home/Home";
 import Phones from "./Components/Pages/Phones";
 import Users from "./Components/Pages/Users";
 import Tickets from "./Components/Pages/Tickets";
-
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {

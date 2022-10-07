@@ -1,5 +1,5 @@
 export function FactoryServerCommunication(url, method, body) {
-    const BASE_URL = "http://localhost:3000";
+    const BASE_URL = "https://backend-repair-shop.herokuapp.com";
     let config;
   
     switch (method) {
