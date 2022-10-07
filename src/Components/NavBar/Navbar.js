@@ -6,7 +6,7 @@ import { IconContext } from "react-icons";
 import "./NavBar.css";
 
 const NavBar = () => {
-  const [showSideBar, setShowSideBar] = useState(false);
+  const [showSideBar, setShowSideBar] = useState(true);
   const toggleSideBar = () => {
     setShowSideBar((currentVal) => !currentVal);
   };
@@ -14,9 +14,9 @@ const NavBar = () => {
     <div className="nav">
       <IconContext.Provider value={{ color: "#fff" }}>
         <div className="navbar">
-          <Link to="#" className="menu-bars">
+          <div className="menu-bars">
             <IOIcons.IoIosMenu onClick={toggleSideBar} />
-          </Link>
+          </div>
         </div>
         <nav className={showSideBar ? "nav-menu active" : "nav-menu"}>
           <NavMenu toggleSideBar={toggleSideBar} />
