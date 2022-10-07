@@ -61,7 +61,7 @@ const Tickets = () => {
   const [users, setUsers ] = React.useState([])
   const [phones, setPhones ] = React.useState([])
 
-  const ticketsHeaders = ['Assigned To','Opened On', 'Closed On', 'Status','Phone being Worked On', 'Delete','Edit']
+  const ticketsHeaders = ['Assigned To','Opened On', 'Closed On', 'Status','Phone being Worked On', 'Delete']
 
   React.useEffect(() => {
     FactoryServerCommunication('/users')(processUsers)
