@@ -41,9 +41,22 @@ const template = {
   ],
 };
 const Phones = () => {
+  const [showModal, setShowModal] = React.useState(false);
+  function onSubmit(formData) {
+    FactoryServerCommunication("/phones", "POST", formData)();
+    setShowModal(false);
+    
+  }
   return (
       <div>Phones</div>
 
+      <Modal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title={"Add new Phone Form"}
+      >
+        <Form template={template} onSubmit={onSubmit} />
+      </Modal>
   );
 };
 
