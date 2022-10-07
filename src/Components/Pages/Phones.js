@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import Form from "./Reusable/Forms";
 import Modal from "./Reusable/Modal";
 import Table from "./Reusable/Table";
+import { FactoryServerCommunication } from "./Reusable/helpers/index";
 const template = {
   fields: [
     {
@@ -42,6 +43,15 @@ const template = {
 };
 const Phones = () => {
   const [showModal, setShowModal] = React.useState(false);
+  const [phones, setPhones] = React.useState([]);
+  const tableHeaders = ["Brand Name", "Imei", "Comment",'Delete']
+   
+  
+  useEffect(() => {
+    FactoryServerCommunication("/phones")(setPhones);
+    console.log('fired')
+  }, [showModal]);
+
   function onSubmit(formData) {
     FactoryServerCommunication("/phones", "POST", formData)();
     setShowModal(false);
