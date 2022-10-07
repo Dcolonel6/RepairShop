@@ -5,7 +5,7 @@
 The project is meant to capture activities and processes taking place in a phone repair shop. It captures process
 such as booking and consequently creation of tickets, how technicians(in the project they identify as users) are assigned to these
 tickets.
-The project is simplistic and shouldnt be used in a real world scenario.
+The project is simplistic and shouldn't be used in a real world scenario.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ### Prerequisites
