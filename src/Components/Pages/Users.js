@@ -58,17 +58,34 @@ const Users = () => {
 
   React.useEffect(() => {
     FactoryServerCommunication('/users')(setUsers)
-  },[showModal])
+  },[])
 
   function onSubmit(formData) {
-    FactoryServerCommunication('/users','POST',formData)()
-    setShowModal(false)
+    FactoryServerCommunication('/users','POST',formData)(update(formData,setUsers))
+    setShowModal(false)    
     //FactoryServerCommunication('/users')(setUsers)
   }
 
-  function deleteUser(id){
-    FactoryServerCommunication(`/users/${id}`,'DELETE')()
-    FactoryServerCommunication('/users')((data) => setUsers(data))
+  //will update the formData with id received from response and also update the state
+  function update(formData,fn){
+    
+    return (response) => {
+      formData.id = response.id;
+      
+      fn(currentUsers => {
+        return [
+          ...currentUsers,
+          formData
+        ]
+      })
+    }
+  }
+
+  function deleteUser(userid){
+    FactoryServerCommunication(`/users/${userid}`,'DELETE')()
+    setUsers(currentUsers => {
+      return currentUsers.filter(({id}) => id !== userid)
+    })
   }
 
   return (

@@ -2,8 +2,7 @@ import React from "react";
 import Form from "./Reusable/Forms";
 import Modal from "./Reusable/Modal";
 import Table from "./Reusable/Table";
-import { FactoryServerCommunication } from "./Reusable/helpers/index"
-
+import { FactoryServerCommunication } from "./Reusable/helpers/index";
 
 const template = {
   fields: [
@@ -12,9 +11,7 @@ const template = {
       type: "select",
       name: "userId",
       labelName: "Assigned To",
-      choices: [
-        
-      ],
+      choices: [],
       dimensions: [],
     },
     {
@@ -22,8 +19,7 @@ const template = {
       type: "select",
       name: "phoneId",
       labelName: "Working on",
-      choices: [        
-      ],
+      choices: [],
       dimensions: [],
     },
     {
@@ -47,85 +43,129 @@ const template = {
       type: "select",
       name: "status",
       labelName: "Ticket Status",
-      choices: [
-        "Opened", 
-        "Closed",         
-      ],
+      choices: ["Opened", "Closed"],
       dimensions: [],
     },
   ],
 };
 const Tickets = () => {
   const [showModal, setShowModal] = React.useState(false);
-  const [allTickets, setallTickets ] = React.useState([]) 
-  const [users, setUsers ] = React.useState([])
-  const [phones, setPhones ] = React.useState([])
+  const [allTickets, setallTickets] = React.useState([]);
+  const [users, setUsers] = React.useState([]);
+  const [phones, setPhones] = React.useState([]);
 
-  const ticketsHeaders = ['Assigned To','Opened On', 'Closed On', 'Status','Phone being Worked On', 'Delete']
+  const ticketsHeaders = [
+    "Assigned To",
+    "Opened On",
+    "Closed On",
+    "Status",
+    "Phone being Worked On",
+    "Delete",
+  ];
 
   React.useEffect(() => {
-    FactoryServerCommunication('/users')(processUsers)
-    FactoryServerCommunication('/phones')(processPhones)
-    FactoryServerCommunication(`/tickets?_expand=user&_expand=phone`)(processTickets)    
-  },[showModal])  
+    FactoryServerCommunication("/users")(processUsers);
+    FactoryServerCommunication("/phones")(processPhones);
+    FactoryServerCommunication(`/tickets?_expand=user&_expand=phone`)(
+      processTickets
+    );
+  }, []);
 
-  function processTickets(data){
+  function processTickets(data) {
     const info = data.map((ticket) => {
-      const {brand, imei } = ticket.phone
-      const {status} = ticket
-      const { fullName } = ticket.user
-      const valueOfStatus = status === '1' ? 'Open' : 'Closed' 
+      const { brand, imei } = ticket.phone;
+      const { status } = ticket;
+      const { fullName } = ticket.user;
+      const valueOfStatus = status === "1" ? "Open" : "Closed";
       return {
         user: fullName,
         openedOn: ticket.openedOn,
         closedOn: ticket.closedOn,
         status: valueOfStatus,
-        phone: `${ brand } imei: ${imei}`,
-        id: ticket.id       
-        
-      }
-
-    })
-    setallTickets(info)
-
+        phone: `${brand} imei: ${imei}`,
+        id: ticket.id,
+      };
+    });
+    setallTickets(info);
   }
-  function processUsers(data){
-    const info = data.map(({id, fullName}) => {
+  function processUsers(data) {
+    const info = data.map(({ id, fullName }) => {
       return {
         id: id,
-        fullName: fullName
-      }
-    })
-    setUsers(info)
-    template.fields[0].choices = info
+        fullName: fullName,
+      };
+    });
+    setUsers(info);
+    template.fields[0].choices = info;
   }
-  function processPhones(data){
-    const info = data.map(({id, brand,imei}) => {
+  function processPhones(data) {
+    const info = data.map(({ id, brand, imei }) => {
       return {
         id: id,
         brand: brand,
-        imei: imei
-      }
-    })
-    setPhones(info)
-    template.fields[1].choices = info
+        imei: imei,
+      };
+    });
+    setPhones(info);
+    template.fields[1].choices = info;
   }
 
-  
-
+  //i have done alot of mutating here.Not ideal
   function onSubmit(formData) {
-    FactoryServerCommunication("/tickets", "POST", formData)();
+    FactoryServerCommunication("/tickets`", "POST", formData)(update(formData,setallTickets));   
     setShowModal(false);
+       
   }
 
-  function deleteTicket(id){
-    FactoryServerCommunication(`/phones/${id}`,'DELETE')()
-    FactoryServerCommunication('/phones')((data) => setPhones(data))
+  function deleteTicket(ticketId) {
+    FactoryServerCommunication(`/tickets/${ticketId}`, "DELETE")();
+    setallTickets((currentTickets) => {
+      return currentTickets.filter(({ id }) => ticketId !== id);
+    });
   }
- 
+  
+  //given an id and an array of object it will return an object with that id 
+  function findObject(queryId,arrayOfObjects){
+    return arrayOfObjects.find(({id}) => queryId == id)
+  }
+
+  //will update the formData with id received from response and also update the state
+  function update(formData,fn){
+    const {brand, imei } = findObject(formData.phoneId,phones) 
+    const {fullName} = findObject(formData.userId,users) 
+    const newTicket = {
+      user: fullName,
+      openedOn:formData.openedOn,
+      closedOn:formData.closedOn,
+      status:formData.status,
+      phone:`${brand}:${imei}`      
+    }  
+     
+    
+    return (response) => {
+      newTicket.id = response.id
+      console.log(response)
+      fn(currentTickets => {
+        return [
+          ...currentTickets,
+          newTicket
+        ]
+      })
+    }
+  }
+
   return (
     <div className="container mx-auto">
       <div>Tickets</div>
+
+      <div className="flex justify-center items-center">
+        <div
+          className="spinner-grow inline-block w-8 h-8 bg-current rounded-full opacity-0"
+          role="status"  
+        >
+          <span className="">Loading...</span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-9 gap-4 mb-4">
         <div className="col-start-4 col-span-2 text-center py-3">
@@ -147,7 +187,11 @@ const Tickets = () => {
       >
         <Form template={template} onSubmit={onSubmit} />
       </Modal>
-      <Table headers={ticketsHeaders} data={allTickets} deleteHandler={deleteTicket} />
+      <Table
+        headers={ticketsHeaders}
+        data={allTickets}
+        deleteHandler={deleteTicket}
+      />
     </div>
   );
 };

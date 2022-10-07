@@ -49,18 +49,36 @@ const Phones = () => {
   
   useEffect(() => {
     FactoryServerCommunication("/phones")(setPhones);
-    console.log('fired')
-  }, [showModal]);
+    
+  }, []);
 
   function onSubmit(formData) {
-    FactoryServerCommunication("/phones", "POST", formData)();
+    FactoryServerCommunication("/phones", "POST", formData)(update(formData,setPhones));
     setShowModal(false);
     
   }
-  function deletePhone(id){
-    FactoryServerCommunication(`/phones/${id}`,'DELETE')()
-    FactoryServerCommunication('/phones')((data) => setPhones(data))
+  function deletePhone(phoneId){
+    FactoryServerCommunication(`/phones/${phoneId}`,'DELETE')()
+    setPhones(currentPhones => {
+      return currentPhones.filter(({id}) => id !== phoneId)
+    })
   }
+
+  //will update the formData with id received from response and also update the state
+  function update(formData,fn){
+    
+    return (response) => {
+      formData.id = response.id;
+      
+      fn(currentPhones => {
+        return [
+          ...currentPhones,
+          formData
+        ]
+      })
+    }
+  }
+
 
   return (
     <div className="container mx-auto">
