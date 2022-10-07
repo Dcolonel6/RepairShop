@@ -1,6 +1,25 @@
-# Getting Started with Create React App
+# Repair Shop
+### By Dennis Njogu
 
+## Description
+The project is meant to capture activities and processes taking place in a phone repair shop. It captures process
+such as booking and consequently creation of tickets, how technicians(in the project they identify as users) are assigned to these
+tickets.
+The project is simplistic and shouldnt be used in a real world scenario.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+### Prerequisites
+Apart from having a browser, you should install [node.js](https://nodejs.org/en/).
+Any version of node from v16 should be fine. 
+Additionally you will need npm for dependancy management, luckily nodejs comes bundled with the package manager. 
+NPM version 8.0.0 and above will suffice.
+
+### Setup and Installation
+1. Clone the repo to the local machine
+2. Cd into the folder named repair-shop from your terminal
+3. Install dependancies by running `npm install`
+4. After the installs have completed run `npm start` to spin a local dev server that will serve this application locally.
+5. You will need internet connection as resources are being fetched from a remote server accessible [here](https://backend-repair-shop.herokuapp.com/)
 
 ## Available Scripts
 
@@ -13,11 +32,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
@@ -39,32 +53,19 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## Live Site
+Alternatively you can visit a live link [here](https://illustrious-beijinho-04b864.netlify.app/)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Built With
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* HTML
+* Tailwind CSS
+* Reactjs - Frontend library for building UI components
 
-### Code Splitting
+## Contacts
+For any enquires kindly send an email at [dennis.njogu@student.moringaschool.com](dennis.njogu@student.moringaschool.com)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## License
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License - for more information kindly visit [LICENSE](https://github.com/Dcolonel6/repair-shop/blob/main/LICENSE) 
+  
