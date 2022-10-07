@@ -8,13 +8,9 @@ import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter forceRefresh={true}>
-      <div className="">
+    <BrowserRouter >      
         <NavBar />
         <Switch>
-          <Route path="/" exact>
-            <Home/>
-          </Route>
           <Route path="/phones">
             <Phones />
           </Route>
@@ -24,8 +20,10 @@ function App() {
           <Route path="/tickets">
             <Tickets />
           </Route> 
-        </Switch>
-      </div>
+          <Route path="/" exact>
+            <Home/>
+          </Route>
+        </Switch>    
     </BrowserRouter>
   );
 }
