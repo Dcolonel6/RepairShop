@@ -35,7 +35,7 @@ export function FactoryServerCommunication(url, method, body) {
       try{
           const response = await fetch(`${BASE_URL}${url}`,config);
           const data = await response.json()
-         // console.log(data)
+          console.log(data)
           if(cb){            
               cb(data)
           }

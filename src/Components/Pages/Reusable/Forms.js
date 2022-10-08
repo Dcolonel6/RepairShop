@@ -1,6 +1,6 @@
 import React from "react";
 
-const Forms = ({ template, onCreate, register, handleSubmit }) => {
+const Forms = ({ template, submitHandler, register, handleSubmit }) => {
   function makeForm({ fields }) {
     return fields.map((field, index) => {
       return (
@@ -17,7 +17,7 @@ const Forms = ({ template, onCreate, register, handleSubmit }) => {
   }
 
   return (
-    <form className="w-full max-w-lg" onSubmit={handleSubmit(onCreate)}>
+    <form className="w-full max-w-lg" onSubmit={handleSubmit(submitHandler)}>
       {makeForm(template)}
       <div className="flex flex-row justify-center">
         <button className="bg-transparent hover:bg-pink-500 text-pink-500 font-semibold hover:text-white py-2 px-4 border border-pink-500 hover:border-transparent rounded">

@@ -11,7 +11,7 @@ const CreateForm = ({ template, onCreate }) => {
         register={register}
         handleSubmit={handleSubmit}
         template={template}
-        onCreate={onCreate}
+        submitHandler={onCreate}
       />
     </>
   );

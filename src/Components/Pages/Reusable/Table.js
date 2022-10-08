@@ -1,12 +1,12 @@
 import React from "react";
 import { AiFillDelete } from "react-icons/ai";
+import { MdEdit } from "react-icons/md";
 
 const Table = ({
   data,
   headers,
   deleteHandler,
-  editHandler,
-  template,
+  clickHandlerEdit,  
   editable = true,
 }) => {
   const headersTHs = headers.map((header, index) => {
@@ -47,6 +47,19 @@ const Table = ({
               onClick={(e) => {
                 e.stopPropagation();
                 deleteHandler(id);
+              }}
+            />
+          )}
+        </td>
+        <td
+          key={`${rowIndx}"-edit"`}
+          className="text-lg text-teal-600 font-normal px-6 py-4 whitespace-nowrap"
+        >
+          {editable && (
+            <MdEdit
+              onClick={(e) => {
+                e.stopPropagation();
+                clickHandlerEdit(row);
               }}
             />
           )}

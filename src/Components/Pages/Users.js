@@ -1,5 +1,6 @@
 import React from 'react'
-import Form from "./Reusable/Forms";
+import CreateForm from "./Reusable/CreateForm";
+import EditForm  from './Reusable/EditForm';
 import Modal from "./Reusable/Modal";
 import Table from "./Reusable/Table";
 import { FactoryServerCommunication } from "./Reusable/helpers/index"
@@ -52,15 +53,17 @@ const template = {
 const Users = () => {
   const [showModal, setShowModal] = React.useState(false);
   const [users, setUsers ] = React.useState([])
+  const [showEditModal, setEditShowModal] = React.useState(false);
+  const [editUser, setEditUser ] = React.useState({})
   const allUsers = {
-    headers: ['Full Name','Email', 'gender', 'isAdmin','Delete']   
+    headers: ['Full Name','Email', 'gender', 'isAdmin','Delete','Edit']   
   }
 
   React.useEffect(() => {
     FactoryServerCommunication('/users')(setUsers)
   },[])
 
-  function onSubmit(formData) {
+  function createNewUser(formData) {
     FactoryServerCommunication('/users','POST',formData)(update(formData,setUsers))
     setShowModal(false)    
     //FactoryServerCommunication('/users')(setUsers)
@@ -82,9 +85,24 @@ const Users = () => {
   }
 
   function deleteUser(userid){
-    FactoryServerCommunication(`/users/${userid}`,'DELETE')()
+     
     setUsers(currentUsers => {
       return currentUsers.filter(({id}) => id !== userid)
+    })
+  }
+
+  function clickHandlerEdit(user){    
+    setEditShowModal(true)
+    setEditUser(user)
+  }
+  function onEditSubmit(formData){
+    
+    setEditShowModal(false)
+    FactoryServerCommunication(`/users/${formData.id}`,'PATCH',formData)()
+    setUsers(currentUsers => {
+      return currentUsers.map((user) => {
+        return user.id === formData.id ? formData : user
+      })
     })
   }
 
@@ -112,9 +130,16 @@ const Users = () => {
       setShowModal={setShowModal}
       title={"Add new User Form"}
     >
-      <Form template={template} onSubmit={onSubmit}  />
+      <CreateForm template={template} onCreate={createNewUser}  />
     </Modal>
-    <Table headers={allUsers.headers} data={users} deleteHandler={deleteUser} />
+    <Table headers={allUsers.headers} data={users} deleteHandler={deleteUser} clickHandlerEdit={clickHandlerEdit} />
+    <Modal
+      showModal={showEditModal}
+      setShowModal={setEditShowModal}
+      title={"Add Edit User Form"}
+    >
+      <EditForm template={template} onEditSubmit={onEditSubmit}  data={editUser}/>
+    </Modal>
   </div>
   )
 }
