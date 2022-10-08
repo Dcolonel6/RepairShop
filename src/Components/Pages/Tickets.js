@@ -142,8 +142,7 @@ const Tickets = () => {
     const newTicket = mapFormData(formData);
 
     return (response) => {
-      newTicket.id = response.id;
-      console.log(response);
+      newTicket.id = response.id;      
       fn((currentTickets) => {
         return [
           newTicket,
