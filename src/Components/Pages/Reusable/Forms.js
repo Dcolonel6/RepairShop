@@ -1,9 +1,6 @@
 import React from "react";
-import { useForm } from "react-hook-form";
 
-const Forms = ({ template,onSubmit }) => {
-  const { register, handleSubmit } = useForm();
-
+const Forms = ({ template, onCreate, register, handleSubmit }) => {
   function makeForm({ fields }) {
     return fields.map((field, index) => {
       return (
@@ -20,7 +17,7 @@ const Forms = ({ template,onSubmit }) => {
   }
 
   return (
-    <form className="w-full max-w-lg" onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-full max-w-lg" onSubmit={handleSubmit(onCreate)}>
       {makeForm(template)}
       <div className="flex flex-row justify-center">
         <button className="bg-transparent hover:bg-pink-500 text-pink-500 font-semibold hover:text-white py-2 px-4 border border-pink-500 hover:border-transparent rounded">
@@ -113,33 +110,32 @@ function initInput(input, fnRegister) {
   return field;
 }
 
-function processOptions(input){
-  
-  //check if its an array of Objects or strings  
-  const { choices } = input
-  let optionsArray =[]
-  if(typeof choices[0] === 'string'){
-    optionsArray =  choices.map((choice,index) => {
+function processOptions(input) {
+  //check if its an array of Objects or strings
+  const { choices } = input;
+  let optionsArray = [];
+  if (typeof choices[0] === "string") {
+    optionsArray = choices.map((choice, index) => {
       return (
         <option key={`${choice}-${input.name}`} value={choice}>
           {choice}
         </option>
       );
-    })
-    return optionsArray
+    });
+    return optionsArray;
   }
-  for (const choice of choices){
-    
-    const value  = Object.hasOwn(choice, 'fullName') ? choice.fullName : `${choice.brand}:${choice.imei}`   
-      optionsArray.push((
-        <option key={choice.id} value={choice.id}>
-          {value}
-        </option>
-      ));
+  for (const choice of choices) {
+    const value = Object.hasOwn(choice, "fullName")
+      ? choice.fullName
+      : `${choice.brand}:${choice.imei}`;
+    optionsArray.push(
+      <option key={choice.id} value={choice.id}>
+        {value}
+      </option>
+    );
   }
-  
-  return optionsArray
 
+  return optionsArray;
 }
 
 export default Forms;
