@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
-import Form from "./Reusable/Forms";
+import EditForm from "./Reusable/EditForm";
+import CreateForm from "./Reusable/CreateForm";
 import Modal from "./Reusable/Modal";
 import Table from "./Reusable/Table";
 import { FactoryServerCommunication } from "./Reusable/helpers/index";
@@ -44,7 +45,9 @@ const template = {
 const Phones = () => {
   const [showModal, setShowModal] = React.useState(false);
   const [phones, setPhones] = React.useState([]);
-  const tableHeaders = ["Brand Name", "Imei", "Comment",'Delete']
+  const [showEditModal, setEditShowModal] = React.useState(false);
+  const [editPhone, setEditPhone ] = React.useState({})
+  const tableHeaders = ["Brand Name", "Imei", "Comment",'Delete','Edit']
    
   
   useEffect(() => {
@@ -52,7 +55,7 @@ const Phones = () => {
     
   }, []);
 
-  function onSubmit(formData) {
+  function createNewPhone(formData) {
     FactoryServerCommunication("/phones", "POST", formData)(update(formData,setPhones));
     setShowModal(false);
     
@@ -79,6 +82,20 @@ const Phones = () => {
     }
   }
 
+  function clickHandlerEdit(phone){    
+    setEditShowModal(true)
+    setEditPhone(phone)
+  }
+  function onEditSubmit(formData){    
+    setEditShowModal(false)
+    FactoryServerCommunication(`/phones/${formData.id}`,'PATCH',formData)()
+    setPhones(currentPhones => {
+      return currentPhones.map((phone) => {
+        return phone.id === formData.id ? formData : phone
+      })
+    })
+  }
+
 
   return (
     <div className="container mx-auto">
@@ -102,9 +119,16 @@ const Phones = () => {
         setShowModal={setShowModal}
         title={"Add new Phone Form"}
       >
-        <Form template={template} onSubmit={onSubmit} />
+        <CreateForm template={template} onCreate={createNewPhone} />
       </Modal>
-      <Table headers={tableHeaders} data={phones} deleteHandler={deletePhone} />
+      <Table headers={tableHeaders} data={phones} deleteHandler={deletePhone} clickHandlerEdit={clickHandlerEdit}/>
+      <Modal
+      showModal={showEditModal}
+      setShowModal={setEditShowModal}
+      title={"Add Edit User Form"}
+    >
+      <EditForm template={template} onEditSubmit={onEditSubmit}  data={editPhone}/>
+    </Modal>
     </div>
   );
 };
