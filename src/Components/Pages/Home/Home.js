@@ -56,8 +56,7 @@ const Home = () => {
     
      return obj[category] === query
   })
-  console.log(filteredSet)
-  console.log(selectData(context))
+ 
 
   return (
     <div className="content mt-5 ml-10">
