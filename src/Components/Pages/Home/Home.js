@@ -13,7 +13,7 @@ const Home = () => {
   const [filterBy, setFilterBy] = useState({
     context: "user",
     category: "isAdmin",
-    query: 'YES',
+    query: 'Yes',
   });
   const { context,category,query } = filterBy;
 
