@@ -22,6 +22,7 @@ const Table = ({
       </th>
     );
   });
+
   const trsWithData = data.map((row, rowIndx) => {
     const { id } = row;
     const tds = Object.entries(row).map(([prope, value], index) => {
@@ -36,7 +37,7 @@ const Table = ({
     });
 
     return (
-      <tr key={id} className="border-b">
+      <tr key={`${id}-${rowIndx}`} className="border-b">
         {tds}
         <td
           key={`${rowIndx}"-delete"`}

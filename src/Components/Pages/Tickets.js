@@ -1,5 +1,6 @@
 import React from "react";
-import Form from "./Reusable/Forms";
+import EditForm from "./Reusable/EditForm";
+import CreateForm from "./Reusable/CreateForm";
 import Modal from "./Reusable/Modal";
 import Table from "./Reusable/Table";
 import { FactoryServerCommunication } from "./Reusable/helpers/index";
@@ -53,6 +54,8 @@ const Tickets = () => {
   const [allTickets, setallTickets] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [phones, setPhones] = React.useState([]);
+  const [showEditModal, setEditShowModal] = React.useState(false);
+  const [editTicket, setEditTicket] = React.useState({});
 
   const ticketsHeaders = [
     "Assigned To",
@@ -61,6 +64,7 @@ const Tickets = () => {
     "Status",
     "Phone being Worked On",
     "Delete",
+    "Edit",
   ];
 
   React.useEffect(() => {
@@ -88,6 +92,7 @@ const Tickets = () => {
     });
     setallTickets(info);
   }
+
   function processUsers(data) {
     const info = data.map(({ id, fullName }) => {
       return {
@@ -98,6 +103,7 @@ const Tickets = () => {
     setUsers(info);
     template.fields[0].choices = info;
   }
+
   function processPhones(data) {
     const info = data.map(({ id, brand, imei }) => {
       return {
@@ -110,11 +116,13 @@ const Tickets = () => {
     template.fields[1].choices = info;
   }
 
-  //i have done alot of mutating here.Not ideal
-  function onSubmit(formData) {
-    FactoryServerCommunication("/tickets`", "POST", formData)(update(formData,setallTickets));   
+  function createNewTicket(formData) {
+    FactoryServerCommunication(
+      "/tickets`",
+      "POST",
+      formData
+    )(update(formData, setallTickets));
     setShowModal(false);
-       
   }
 
   function deleteTicket(ticketId) {
@@ -123,49 +131,63 @@ const Tickets = () => {
       return currentTickets.filter(({ id }) => ticketId !== id);
     });
   }
-  
-  //given an id and an array of object it will return an object with that id 
-  function findObject(queryId,arrayOfObjects){
-    return arrayOfObjects.find(({id}) => queryId == id)
+
+  //given an id and an array of object it will return an object with that id
+  function findObject(queryId, arrayOfObjects) {
+    return arrayOfObjects.find(({ id }) => queryId == id);
   }
 
   //will update the formData with id received from response and also update the state
-  function update(formData,fn){
-    const {brand, imei } = findObject(formData.phoneId,phones) 
-    const {fullName} = findObject(formData.userId,users) 
-    const newTicket = {
-      user: fullName,
-      openedOn:formData.openedOn,
-      closedOn:formData.closedOn,
-      status:formData.status,
-      phone:`${brand}:${imei}`      
-    }  
-     
-    
+  function update(formData, fn) {
+    const newTicket = mapFormData(formData);
+
     return (response) => {
-      newTicket.id = response.id
-      console.log(response)
-      fn(currentTickets => {
+      newTicket.id = response.id;
+      console.log(response);
+      fn((currentTickets) => {
         return [
-          ...currentTickets,
-          newTicket
-        ]
-      })
-    }
+          newTicket,
+          ...currentTickets
+        ];
+      });
+    };
+  }
+
+  function clickHandlerEdit(ticket) {
+    setEditShowModal(true);
+    setEditTicket(ticket);
+  }
+
+  function onEditSubmit(formData) {
+    const updatedTicket = mapFormData(formData);
+    setEditShowModal(false);
+    FactoryServerCommunication(`/tickets/${formData.id}`, "PATCH", formData)();
+
+    setallTickets((currentTickets) => {
+
+      return currentTickets.map((ticket) => {
+        return ticket.id === updatedTicket.id ? updatedTicket : ticket;
+      });
+    });
+  }
+
+  function mapFormData(formData) {
+    const { brand, imei } = findObject(formData.phoneId, phones);
+    const { fullName } = findObject(formData.userId, users);
+    const mappedTicket = {
+      user: fullName,
+      openedOn: formData.openedOn,
+      closedOn: formData.closedOn,
+      status: formData.status,
+      phone: `${brand}:${imei}`,
+      id: formData.id,
+    };
+    return mappedTicket;
   }
 
   return (
     <div className="container mx-auto">
-      <div>Tickets</div>
-
-      <div className="flex justify-center items-center">
-        <div
-          className="spinner-grow inline-block w-8 h-8 bg-current rounded-full opacity-0"
-          role="status"  
-        >
-          <span className="">Loading...</span>
-        </div>
-      </div>
+      <div>Tickets</div>   
 
       <div className="grid grid-cols-9 gap-4 mb-4">
         <div className="col-start-4 col-span-2 text-center py-3">
@@ -185,13 +207,25 @@ const Tickets = () => {
         setShowModal={setShowModal}
         title={"Add new Ticket Form"}
       >
-        <Form template={template} onSubmit={onSubmit} />
+        <CreateForm template={template} onCreate={createNewTicket} />
       </Modal>
       <Table
         headers={ticketsHeaders}
         data={allTickets}
         deleteHandler={deleteTicket}
+        clickHandlerEdit={clickHandlerEdit}
       />
+      <Modal
+        showModal={showEditModal}
+        setShowModal={setEditShowModal}
+        title={"Add Edit User Form"}
+      >
+        <EditForm
+          template={template}
+          onEditSubmit={onEditSubmit}
+          data={editTicket}
+        />
+      </Modal>
     </div>
   );
 };
