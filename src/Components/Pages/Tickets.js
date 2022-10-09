@@ -159,8 +159,16 @@ const Tickets = () => {
 
   function onEditSubmit(formData) {
     const updatedTicket = mapFormData(formData);
+    const payload = {
+      userid:formData.userid,
+      phoneId:formData.phoneId,
+      openedOn: formData.openedOn,
+      closedOn: formData.closedOn,
+      status: formData.status === "Opened" ? 'Open':formData.status,
+    }
+    //console.log(formData)
     setEditShowModal(false);
-    FactoryServerCommunication(`/tickets/${formData.id}`, "PATCH", formData)();
+    FactoryServerCommunication(`/tickets/${updatedTicket.id}`, "PATCH", payload)();
 
     setallTickets((currentTickets) => {
 
@@ -177,7 +185,7 @@ const Tickets = () => {
       user: fullName,
       openedOn: formData.openedOn,
       closedOn: formData.closedOn,
-      status: formData.status,
+      status: formData.status === "Opened" ? 'Open':formData.status,
       phone: `${brand}:${imei}`,
       id: formData.id,
     };
