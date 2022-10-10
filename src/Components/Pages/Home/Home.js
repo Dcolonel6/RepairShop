@@ -4,6 +4,7 @@ import { FactoryServerCommunication } from "../Reusable/helpers/index";
 import { GrGroup } from "react-icons/gr";
 import { MdPhonelinkSetup } from "react-icons/md";
 import { GiAutoRepair } from "react-icons/gi";
+import PieChart from "../Reusable/PieChart";
 import headers from "./tableHeadersData";
 
 const Home = () => {
@@ -177,6 +178,7 @@ const Home = () => {
             headers={Object.values(headers[context])}
             data={filteredSet}
           />
+          <PieChart context={filterBy.context } chartData={filteredSet} category={filterBy.category}/>
         </div>
       </div>
     </div>

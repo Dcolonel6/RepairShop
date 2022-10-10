@@ -118,7 +118,7 @@ const Tickets = () => {
 
   function createNewTicket(formData) {
     FactoryServerCommunication(
-      "/tickets`",
+      "/tickets",
       "POST",
       formData
     )(update(formData, setallTickets));
@@ -160,7 +160,7 @@ const Tickets = () => {
   function onEditSubmit(formData) {
     const updatedTicket = mapFormData(formData);
     const payload = {
-      userid:formData.userid,
+      userid:formData.userId,
       phoneId:formData.phoneId,
       openedOn: formData.openedOn,
       closedOn: formData.closedOn,
@@ -168,6 +168,7 @@ const Tickets = () => {
     }
     //console.log(formData)
     setEditShowModal(false);
+    console.log(payload)
     FactoryServerCommunication(`/tickets/${updatedTicket.id}`, "PATCH", payload)();
 
     setallTickets((currentTickets) => {
