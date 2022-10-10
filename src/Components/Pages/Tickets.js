@@ -160,7 +160,7 @@ const Tickets = () => {
   function onEditSubmit(formData) {
     const updatedTicket = mapFormData(formData);
     const payload = {
-      userid:formData.userId,
+      userId:formData.userId,
       phoneId:formData.phoneId,
       openedOn: formData.openedOn,
       closedOn: formData.closedOn,
